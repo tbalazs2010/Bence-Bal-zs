@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UMSZKI Iskola</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #eef2f5;
+            color: #222;
+        }
+
+        header {
+            background: #17365d;
+            color: white;
+            text-align: center;
+            padding: 30px 20px;
+        }
+
+        header h1 {
+            margin: 0 0 10px;
+            font-size: 36px;
+        }
+
+        header p {
+            margin: 0;
+            font-size: 18px;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .bemutatas {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+
+        .emelet {
+            background: white;
+            margin-bottom: 25px;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+
+        .emelet h2 {
+            color: #17365d;
+            border-bottom: 2px solid #17365d;
+            padding-bottom: 10px;
+        }
+
+        .termek {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+        }
+
+        .terem {
+            background: #2878b5;
+            color: white;
+            border: none;
+            padding: 20px;
+            border-radius: 10px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .terem:hover {
+            background: #1c5887;
+            transform: translateY(-3px);
+        }
+
+        .info {
+            display: none;
+            margin-top: 20px;
+            padding: 20px;
+            background: #e8f3fb;
+            border-left: 5px solid #2878b5;
+            border-radius: 8px;
+        }
+
+        .info.aktiv {
+            display: block;
+        }
+
+        footer {
+            background: #17365d;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            margin-top: 40px;
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>UMSZKI</h1>
+    <p>Az iskola épületének és termeinek bemutatása</p>
+</header>
+
+<div class="container">
+
+    <section class="bemutatas">
+        <h2>Az iskola kinézete</h2>
+        <p>
+            Az UMSZKI iskola épületének bemutatásánál az egyes emeleteket
+            és az ott található termeket lehet megtekinteni.
+            Kattints egy terem nevére a terem rövid leírásához.
+        </p>
+    </section>
+
+
+    <!-- FÖLDSZINT -->
+    <section class="emelet">
+        <h2>Földszint</h2>
+
+        <div class="termek">
+
+            <button class="terem"
+                onclick="mutatInfo('f1')">
+                101-es terem
+            </button>
+
+            <button class="terem"
+                onclick="mutatInfo('f2')">
+                102-es terem
+            </button>
+
+            <button class="terem"
+                onclick="mutatInfo('f3')">
+                103-as terem
+            </button>
+
+        </div>
+
+        <div id="f1" class="info">
+            <h3>101-es terem</h3>
+            <p>
+                Ez a terem az iskola földszintjén található,
+                és tanórák megtartására szolgál.
+            </p>
+        </div>
+
+        <div id="f2" class="info">
+            <h3>102-es terem</h3>
+            <p>
+                A 102-es terem a földszinten található,
+                és az iskola oktatási helyiségeinek egyike.
+            </p>
+        </div>
+
+        <div id="f3" class="info">
+            <h3>103-as terem</h3>
+            <p>
+                A 103-as terem egy oktatásra használt helyiség
+                az iskola földszintjén.
+            </p>
+        </div>
+    </section>
+
+
+    <!-- 1. EMELET -->
+    <section class="emelet">
+        <h2>1. emelet</h2>
+
+        <div class="termek">
+
+            <button class="terem"
+                onclick="mutatInfo('e11')">
+                201-es terem
+            </button>
+
+            <button class="terem"
+                onclick="mutatInfo('e12')">
+                202-es terem
+            </button>
+
+            <button class="terem"
+                onclick="mutatInfo('e13')">
+                203-as terem
+            </button>
+
+        </div>
+
+        <div id="e11" class="info">
+            <h3>201-es terem</h3>
+            <p>
+                A 201-es terem az első emeleten található,
+                és az iskola egyik tanterme.
+            </p>
+        </div>
+
+        <div id="e12" class="info">
+            <h3>202-es terem</h3>
+            <p>
+                A 202-es terem az első emeleten található
+                oktatási helyiség.
+            </p>
+        </div>
+
+        <div id="e13" class="info">
+            <h3>203-as terem</h3>
+            <p>
+                A 203-as terem az első emeleten található,
+                és tanítási célokra használható.
+            </p>
+        </div>
+    </section>
+
+
+    <!-- 2. EMELET -->
+    <section class="emelet">
+        <h2>2. emelet</h2>
+
+        <div class="termek">
+
+            <button class="terem"
+                onclick="mutatInfo('e21')">
+                301-es terem
+            </button>
+
+            <button class="terem"
+                onclick="mutatInfo('e22')">
+                302-es terem
+            </button>
+
+            <button class="terem"
+                onclick="mutatInfo('e23')">
+                303-as terem
+            </button>
+
+        </div>
+
+        <div id="e21" class="info">
+            <h3>301-es terem</h3>
+            <p>
+                A 301-es terem a második emeleten található,
+                és oktatási célokat szolgál.
+            </p>
+        </div>
+
+        <div id="e22" class="info">
+            <h3>302-es terem</h3>
+            <p>
+                A 302-es terem a második emeleten található
+                tanterem.
+            </p>
+        </div>
+
+        <div id="e23" class="info">
+            <h3>303-as terem</h3>
+            <p>
+                A 303-as terem az iskola második emeletének
+                egyik helyisége.
+            </p>
+        </div>
+    </section>
+
+</div>
+
+<footer>
+    <p>UMSZKI – Iskolai bemutató</p>
+</footer>
+
+
+<script>
+
+function mutatInfo(id) {
+
+    // Minden információs dobozt bezárunk
+    const infok = document.querySelectorAll(".info");
+
+    infok.forEach(function(info) {
+        info.classList.remove("aktiv");
+    });
+
+    // A kiválasztott terem információját megjelenítjük
+    const kivalasztott = document.getElementById(id);
+
+    if (kivalasztott) {
+        kivalasztott.classList.add("aktiv");
+
+        // Görgessen oda a böngésző
+        kivalasztott.scrollIntoView({
+            behavior: "smooth",
+            block: "center"
+        });
+    }
+}
+
+</script>
+
+</body>
+</html>
