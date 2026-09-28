@@ -1,0 +1,579 @@
+```html
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Iskolatérkép</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f1f5f9;
+            color: #172033;
+        }
+
+        header {
+            background: #2563eb;
+            color: white;
+            padding: 25px;
+            text-align: center;
+        }
+
+        header h1 {
+            margin: 0 0 8px;
+        }
+
+        header p {
+            margin: 0;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        /* Emeletválasztó */
+
+        .floors {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .floor-button {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            background: white;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 15px;
+        }
+
+        .floor-button:hover {
+            background: #dbeafe;
+        }
+
+        .floor-button.active {
+            background: #2563eb;
+            color: white;
+        }
+
+        /* Térkép */
+
+        .map-container {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            overflow-x: auto;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .map {
+            min-width: 800px;
+            height: 450px;
+            position: relative;
+            border: 4px solid #64748b;
+            background: #f8fafc;
+        }
+
+        /* Termek */
+
+        .room {
+            position: absolute;
+            border: 2px solid #475569;
+            background: #e2e8f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+
+        .room:hover {
+            background: #bfdbfe;
+            transform: scale(1.02);
+        }
+
+        .room.selected {
+            background: #93c5fd;
+            border-color: #2563eb;
+        }
+
+        /* Folyosó */
+
+        .corridor {
+            position: absolute;
+            background: #fef3c7;
+            border: 2px dashed #ca8a04;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #92400e;
+        }
+
+        /* Információs panel */
+
+        .information {
+            margin-top: 20px;
+            padding: 20px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .information h2 {
+            margin-top: 0;
+        }
+
+        #roomDescription {
+            color: #64748b;
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px;
+            color: #64748b;
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>🏫 Iskolatérkép</h1>
+    <p>Az iskola három emeletének interaktív térképe</p>
+</header>
+
+
+<div class="container">
+
+    <!-- Emeletek -->
+
+    <div class="floors">
+
+        <button class="floor-button active" onclick="showFloor(1)">
+            Földszint
+        </button>
+
+        <button class="floor-button" onclick="showFloor(2)">
+            1. emelet
+        </button>
+
+        <button class="floor-button" onclick="showFloor(3)">
+            2. emelet
+        </button>
+
+    </div>
+
+
+    <!-- Térkép -->
+
+    <div class="map-container">
+
+        <div class="map" id="map">
+
+            <!-- A termek ide kerülnek -->
+
+        </div>
+
+    </div>
+
+
+    <!-- Információ -->
+
+    <div class="information">
+
+        <h2 id="roomName">
+            Nincs kiválasztott terem
+        </h2>
+
+        <p id="roomDescription">
+            Kattints egy teremre a térképen!
+        </p>
+
+    </div>
+
+</div>
+
+
+<footer>
+    Iskolai projekt – Iskolatérkép
+</footer>
+
+
+<script>
+
+    /*
+        Az iskola termeinek adatai.
+
+        Később ezeket az adatokat
+        egyszerűen át tudod írni.
+    */
+
+    const floors = {
+
+        1: [
+
+            {
+                name: "101",
+                description: "Matematika terem",
+                x: 20,
+                y: 30,
+                width: 150,
+                height: 100
+            },
+
+            {
+                name: "102",
+                description: "Informatika terem",
+                x: 180,
+                y: 30,
+                width: 150,
+                height: 100
+            },
+
+            {
+                name: "103",
+                description: "Tanári szoba",
+                x: 340,
+                y: 30,
+                width: 150,
+                height: 100
+            },
+
+            {
+                name: "104",
+                description: "Könyvtár",
+                x: 500,
+                y: 30,
+                width: 150,
+                height: 100
+            },
+
+            {
+                name: "105",
+                description: "Fizika terem",
+                x: 20,
+                y: 180,
+                width: 150,
+                height: 100
+            },
+
+            {
+                name: "106",
+                description: "Kémia terem",
+                x: 180,
+                y: 180,
+                width: 150,
+                height: 100
+            },
+
+            {
+                name: "AULA",
+                description: "Az iskola központi aulája",
+                x: 340,
+                y: 180,
+                width: 310,
+                height: 100
+            }
+
+        ],
+
+
+        2: [
+
+            {
+                name: "201",
+                description: "Magyar nyelv és irodalom terem",
+                x: 20,
+                y: 30,
+                width: 150,
+                height: 100
+            },
+
+            {
+                name: "202",
+                description: "Angol terem",
+                x: 180,
+                y: 30,
+                width: 150,
+                height: 100
+            },
+
+            {
+                name: "203",
+                description: "Történelem terem",
+                x: 340,
+                y: 30,
+                width: 150,
+                height: 100
+            },
+
+            {
+                name: "204",
+                description: "Rajzterem",
+                x: 500,
+                y: 30,
+                width: 150,
+                height: 100
+            },
+
+            {
+                name: "205",
+                description: "Osztályterem",
+                x: 20,
+                y: 180,
+                width: 150,
+                height: 100
+            },
+
+            {
+                name: "206",
+                description: "Osztályterem",
+                x: 180,
+                y: 180,
+                width: 150,
+                height: 100
+            },
+
+            {
+                name: "FOLYOSÓ",
+                description: "Az első emelet folyosója",
+                x: 340,
+                y: 180,
+                width: 310,
+                height: 100
+            }
+
+        ],
+
+
+        3: [
+
+            {
+                name: "301",
+                description: "Biológia terem",
+                x: 20,
+                y: 30,
+                width: 150,
+                height: 100
+            },
+
+            {
+                name: "302",
+                description: "Informatika terem",
+                x: 180,
+                y: 30,
+                width: 150,
+                height: 100
+            },
+
+            {
+                name: "303",
+                description: "Zeneterem",
+                x: 340,
+                y: 30,
+                width: 150,
+                height: 100
+            },
+
+            {
+                name: "304",
+                description: "Szertár",
+                x: 500,
+                y: 30,
+                width: 150,
+                height: 100
+            },
+
+            {
+                name: "305",
+                description: "Osztályterem",
+                x: 20,
+                y: 180,
+                width: 150,
+                height: 100
+            },
+
+            {
+                name: "306",
+                description: "Osztályterem",
+                x: 180,
+                y: 180,
+                width: 150,
+                height: 100
+            },
+
+            {
+                name: "FOLYOSÓ",
+                description: "A második emelet folyosója",
+                x: 340,
+                y: 180,
+                width: 310,
+                height: 100
+            }
+
+        ]
+
+    };
+
+
+    /*
+        Megjeleníti a kiválasztott emeletet.
+    */
+
+    function showFloor(floorNumber) {
+
+        const map = document.getElementById("map");
+
+        map.innerHTML = "";
+
+
+        /*
+            Emeletgombok állapotának frissítése
+        */
+
+        const buttons =
+            document.querySelectorAll(".floor-button");
+
+        buttons.forEach(function(button, index) {
+
+            if (index + 1 === floorNumber) {
+
+                button.classList.add("active");
+
+            } else {
+
+                button.classList.remove("active");
+
+            }
+
+        });
+
+
+        /*
+            Termek létrehozása
+        */
+
+        floors[floorNumber].forEach(function(room) {
+
+            const roomElement =
+                document.createElement("div");
+
+            roomElement.classList.add("room");
+
+
+            /*
+                A terem pozíciója
+            */
+
+            roomElement.style.left =
+                room.x + "px";
+
+            roomElement.style.top =
+                room.y + "px";
+
+            roomElement.style.width =
+                room.width + "px";
+
+            roomElement.style.height =
+                room.height + "px";
+
+
+            /*
+                Terem neve
+            */
+
+            roomElement.textContent =
+                room.name;
+
+
+            /*
+                Kattintás esemény
+            */
+
+            roomElement.onclick = function() {
+
+                selectRoom(
+                    roomElement,
+                    room
+                );
+
+            };
+
+
+            map.appendChild(roomElement);
+
+        });
+
+    }
+
+
+    /*
+        Terem kiválasztása
+    */
+
+    function selectRoom(element, room) {
+
+        /*
+            Előző kijelölés megszüntetése
+        */
+
+        document
+            .querySelectorAll(".room")
+            .forEach(function(roomElement) {
+
+                roomElement.classList.remove("selected");
+
+            });
+
+
+        /*
+            Új terem kijelölése
+        */
+
+        element.classList.add("selected");
+
+
+        /*
+            Információ megjelenítése
+        */
+
+        document.getElementById("roomName")
+            .textContent =
+            "Terem: " + room.name;
+
+
+        document.getElementById("roomDescription")
+            .textContent =
+            room.description;
+
+    }
+
+
+    /*
+        Alapértelmezésként
+        a földszint jelenik meg.
+    */
+
+    showFloor(1);
+
+</script>
+
+</body>
+</html>
+```
+
